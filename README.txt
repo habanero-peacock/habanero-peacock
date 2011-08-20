@@ -1,0 +1,1 @@
+This is the code example for my talk about structured refactoring.
