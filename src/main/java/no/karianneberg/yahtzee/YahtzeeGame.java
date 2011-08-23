@@ -46,6 +46,24 @@ public class YahtzeeGame {
                 TwoPairs result = currentThrow.findTwoPairs();
                 if(result == null) return 0;
                 return (result.getFirst() * 2) + (result.getSecond() * 2);
+            case THREE_OF_A_KIND:
+                num = currentThrow.findThreeOfAKind();
+                return num > 0 ? num * 3 : 0;
+            case FOUR_OF_A_KIND:
+                num = currentThrow.findFourOfAKind();
+                return num > 0 ? num * 4 : 0;
+            case FULL_HOUSE:
+                FullHouse fullHouse = currentThrow.findFullHouse();
+                if(fullHouse == null) return 0;
+                return (fullHouse.getFirst() * 2) + (fullHouse.getSecond() * 3);
+            case SMALL_STRAIGHT:
+                return currentThrow.isSmallStraight() ? 15 : 0;
+            case LARGE_STRAIGHT:
+                return currentThrow.isLargeStraight() ? 20 : 0;
+            case CHANCE:
+                return currentThrow.sum();
+            case YAHTZEE:
+                return currentThrow.isYahtzee() ? 50 : 0;
         }
         return num;
     }

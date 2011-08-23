@@ -113,6 +113,16 @@ public class YahtzeeGameTest {
     }
 
     @Test
+    public void smallStraightGivesZeroPointsForTwoPairs() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 2, 3, 4, 5));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.TWO_PAIRS);
+
+        assertThat(score).isEqualTo(0);
+    }
+
+    @Test
     public void twoOnesAndTwoFivesGivesTwelvePointsForTwoPairs() throws Exception {
         when(resultStrategy.throwDice()).thenReturn(new Throw(5, 1, 5, 3, 1));
 
@@ -130,5 +140,105 @@ public class YahtzeeGameTest {
         int score = game.scoreFor(Combination.TWO_PAIRS);
 
         assertThat(score).isEqualTo(4);
+    }
+
+    @Test
+    public void threeOnesGivesThreePointsForThreeOfAKind() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 4, 6, 1));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.THREE_OF_A_KIND);
+
+        assertThat(score).isEqualTo(3);
+    }
+
+    @Test
+    public void fourTwosGivesEightPointsForFourOfAKind() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(2, 3, 2, 2, 2));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.FOUR_OF_A_KIND);
+
+        assertThat(score).isEqualTo(8);
+    }
+
+    @Test
+    public void threeTwosAndTwoFivesGivesSixteenPointsForFullHouse() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(2, 5, 2, 5, 2));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.FULL_HOUSE);
+
+        assertThat(score).isEqualTo(16);
+    }
+
+    @Test
+    public void yahtzeeInTwosGivesTenPointsForFullHouse() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(2, 2, 2, 2, 2));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.FULL_HOUSE);
+
+        assertThat(score).isEqualTo(10);
+    }
+
+    @Test
+    public void smallStraightGivesFifteenPointsForSmallStraight() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 2, 3, 4, 5));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.SMALL_STRAIGHT);
+
+        assertThat(score).isEqualTo(15);
+    }
+
+    @Test
+    public void oneTwoThreeFiveSixGivesNoPointsForSmallStraight() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 2, 3, 6, 5));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.SMALL_STRAIGHT);
+
+        assertThat(score).isZero();
+    }
+
+    @Test
+    public void oneTwoThreeFiveSixGivesNoPointsForLargeStraight() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 2, 3, 6, 5));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.LARGE_STRAIGHT);
+
+        assertThat(score).isZero();
+    }
+
+    @Test
+    public void largeStraightGivesTwentyPointsForLargeStraight() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(3, 2, 6, 4, 5));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.LARGE_STRAIGHT);
+
+        assertThat(score).isEqualTo(20);
+    }
+
+    @Test
+    public void allOnesGivesFivePointsForChance() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.CHANCE);
+
+        assertThat(score).isEqualTo(5);
+    }
+
+    @Test
+    public void allOnesGivesFiftyPointsForYahtzee() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.YAHTZEE);
+
+        assertThat(score).isEqualTo(50);
     }
 }
