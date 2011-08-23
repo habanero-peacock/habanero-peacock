@@ -3,6 +3,7 @@ package no.karianneberg.yahtzee;
 public class YahtzeeGame {
     private ThrowResultStrategy throwResultStrategy;
     private Throw currentThrow;
+    private int currentScore;
 
     public YahtzeeGame(ThrowResultStrategy throwResultStrategy) {
 
@@ -18,57 +19,82 @@ public class YahtzeeGame {
 
     public int scoreFor(Combination combo) {
 
-        int num = 0;
+        int num;
+        int score = 0;
 
-        switch(combo) {
+        switch (combo) {
             case ONES:
                 num = currentThrow.getNumberOfDiceWithValue(1);
-                return num * 1;
+                score = num;
+                break;
             case TWOS:
                 num = currentThrow.getNumberOfDiceWithValue(2);
-                return num * 2;
+                score = num * 2;
+                break;
             case THREES:
                 num = currentThrow.getNumberOfDiceWithValue(3);
-                return num * 3;
+                score = num * 3;
+                break;
             case FOURS:
                 num = currentThrow.getNumberOfDiceWithValue(4);
-                return num * 4;
+                score = num * 4;
+                break;
             case FIVES:
                 num = currentThrow.getNumberOfDiceWithValue(5);
-                return num * 5;
+                score = num * 5;
+                break;
             case SIXES:
                 num = currentThrow.getNumberOfDiceWithValue(6);
-                return num * 6;
+                score = num * 6;
+                break;
             case ONE_PAIR:
                 num = currentThrow.findPair();
-                return num > 0 ? num * 2 : 0;
+                score = num > 0 ? num * 2 : 0;
+                break;
             case TWO_PAIRS:
                 TwoPairs result = currentThrow.findTwoPairs();
-                if(result == null) return 0;
-                return (result.getFirst() * 2) + (result.getSecond() * 2);
+                if (result == null) {
+                    score = 0;
+                } else {
+                    score = (result.getFirst() * 2) + (result.getSecond() * 2);
+                }
+                break;
             case THREE_OF_A_KIND:
                 num = currentThrow.findThreeOfAKind();
-                return num > 0 ? num * 3 : 0;
+                score = num > 0 ? num * 3 : 0;
+                break;
             case FOUR_OF_A_KIND:
                 num = currentThrow.findFourOfAKind();
-                return num > 0 ? num * 4 : 0;
+                score = num > 0 ? num * 4 : 0;
+                break;
             case FULL_HOUSE:
                 FullHouse fullHouse = currentThrow.findFullHouse();
-                if(fullHouse == null) return 0;
-                return (fullHouse.getFirst() * 2) + (fullHouse.getSecond() * 3);
+                if (fullHouse == null) {
+                    score = 0;
+                } else {
+                    score = (fullHouse.getFirst() * 2) + (fullHouse.getSecond() * 3);
+                }
+                break;
             case SMALL_STRAIGHT:
-                return currentThrow.isSmallStraight() ? 15 : 0;
+                score = currentThrow.isSmallStraight() ? 15 : 0;
+                break;
             case LARGE_STRAIGHT:
-                return currentThrow.isLargeStraight() ? 20 : 0;
+                score = currentThrow.isLargeStraight() ? 20 : 0;
+                break;
             case CHANCE:
-                return currentThrow.sum();
+                score = currentThrow.sum();
+                break;
             case YAHTZEE:
-                return currentThrow.isYahtzee() ? 50 : 0;
+                score = currentThrow.isYahtzee() ? 50 : 0;
+                break;
         }
-        return num;
+
+        currentScore += score;
+
+        return score;
     }
 
     public int finalScore() {
-        return 0;  //To change body of created methods use File | Settings | File Templates.
+        return currentScore;
     }
 }

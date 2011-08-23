@@ -12,7 +12,6 @@ import static no.karianneberg.util.Maps.entry;
 
 public class AcceptanceTest {
 
-
     @Test
     public void onePlayer() {
 
@@ -33,12 +32,10 @@ public class AcceptanceTest {
                 entry(SMALL_STRAIGHT, 15),
                 entry(LARGE_STRAIGHT, 0),
                 entry(YAHTZEE, 0),
-                entry(CHANCE, 21)
+                entry(CHANCE, 15)
         );
 
         for (Combination combo : scores.keySet()) {
-            game.throwDice();
-            game.holdDice();
             game.throwDice();
             game.holdDice();
             game.throwDice();
@@ -46,6 +43,6 @@ public class AcceptanceTest {
             assertThat(score).isEqualTo(scores.get(combo));
         }
 
-        assertThat(game.finalScore()).isEqualTo(51);
+        assertThat(game.finalScore()).isEqualTo(45);
     }
 }

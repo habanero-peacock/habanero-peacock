@@ -241,4 +241,25 @@ public class YahtzeeGameTest {
 
         assertThat(score).isEqualTo(50);
     }
+
+    @Test
+    public void scoreForOneRoundIsEqualToFinalScoreAfterOneRound() {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+
+        game.throwDice();
+        int score = game.scoreFor(Combination.ONES);
+
+        assertThat(game.finalScore()).isEqualTo(score);
+    }
+
+    @Test
+    public void combinesScoreForTwoRoundsIsEqualToFinalScoreAfterTwoRounds() {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+
+        game.throwDice();
+        int firstScore = game.scoreFor(Combination.ONES);
+        int secondScore = game.scoreFor(Combination.THREE_OF_A_KIND);
+
+        assertThat(game.finalScore()).isEqualTo(firstScore + secondScore);
+    }
 }
