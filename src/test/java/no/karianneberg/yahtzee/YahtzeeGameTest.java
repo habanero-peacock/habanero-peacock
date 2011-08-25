@@ -3,6 +3,10 @@ package no.karianneberg.yahtzee;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Map;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -258,8 +262,93 @@ public class YahtzeeGameTest {
 
         game.throwDice();
         int firstScore = game.scoreFor(Combination.ONES);
+        game.throwDice();
         int secondScore = game.scoreFor(Combination.THREE_OF_A_KIND);
 
         assertThat(game.finalScore()).isEqualTo(firstScore + secondScore);
+    }
+
+    @Test
+    public void noDiceWillBeRethrownWhenAllDiceAreHeld() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+        game.throwDice();
+        game.holdDice(0, 1);
+
+        when(resultStrategy.throwDice()).thenReturn(new Throw(2, 2, 2, 2, 2));
+        game.throwDice();
+        Map<Integer, Integer> firstThrow = game.getCurrentThrow();
+
+        Throw expectedThrow = new Throw(1, 1, 2, 2, 2);
+
+        assertNotNull(expectedThrow.asMap());
+        assertEquals(expectedThrow.asMap(), firstThrow);
+    }
+
+    @Test
+    public void heldDiceAreResetAfterScoring() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+        game.throwDice();
+        game.holdDice(0,1);
+
+        when(resultStrategy.throwDice()).thenReturn(new Throw(2, 2, 2, 2, 2));
+        game.throwDice();
+        game.scoreFor(Combination.ONES);
+
+        Throw allThrees = new Throw(3, 3, 3, 3, 3);
+        when(resultStrategy.throwDice()).thenReturn(allThrees);
+        game.throwDice();
+        assertThat(allThrees.asMap()).isEqualTo(game.getCurrentThrow());
+    }
+
+    @Test
+    public void gameIsOverAfterFifteenRounds() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+        for (Combination combo : Combination.values()) {
+            game.throwDice();
+            game.scoreFor(combo);
+        }
+
+        assertThat(game.isOver()).isTrue();
+    }
+
+    @Test
+    public void gameIsNotOverBeforeAfterFifteenRounds() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+        for (Combination combo : Combination.values()) {
+            assertThat(game.isOver()).isFalse();
+            game.throwDice();
+            game.scoreFor(combo);
+        }
+    }
+
+    @Test(expected = YahtzeeException.class)
+    public void cannotPlaceScoreOnSameComboTwice() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+        game.throwDice();
+        game.scoreFor(Combination.TWOS);
+        game.throwDice();
+        game.scoreFor(Combination.TWOS);
+    }
+    
+    @Test(expected = YahtzeeException.class)
+    public void cannotThrowDiceMoreThanThreeTimesInOneRound() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+        game.throwDice();
+        game.throwDice();
+        game.throwDice();
+        game.throwDice();
+    }
+
+    @Test(expected = YahtzeeException.class)
+    public void cannotScoreBeforeAThrowIsMade() throws Exception {
+        game.scoreFor(Combination.ONES);
+    }
+
+    @Test(expected = YahtzeeException.class)
+    public void cannotScoreBeforeAThrowIsMadeEvenAfterItsScoredFirstTime() throws Exception {
+        when(resultStrategy.throwDice()).thenReturn(new Throw(1, 1, 1, 1, 1));
+        game.throwDice();
+        game.scoreFor(Combination.ONES);
+        game.scoreFor(Combination.TWOS);
     }
 }

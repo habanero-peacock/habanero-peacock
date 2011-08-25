@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import static junit.framework.Assert.assertTrue;
 import static org.fest.assertions.Assertions.assertThat;
 import static no.karianneberg.yahtzee.Combination.*;
 import static no.karianneberg.util.Maps.asMap;
@@ -44,5 +45,6 @@ public class AcceptanceTest {
         }
 
         assertThat(game.finalScore()).isEqualTo(45);
+        assertThat(game.isOver()).isTrue();
     }
 }

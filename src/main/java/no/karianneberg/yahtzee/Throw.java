@@ -141,8 +141,8 @@ public class Throw {
 
     public boolean isSmallStraight() {
         Collections.sort(dice);
-        for(int i = 0; i < dice.size(); i++) {
-            if(dice.get(i) != (i + 1)) {
+        for (int i = 0; i < dice.size(); i++) {
+            if (dice.get(i) != (i + 1)) {
                 return false;
             }
         }
@@ -151,8 +151,8 @@ public class Throw {
 
     public boolean isLargeStraight() {
         Collections.sort(dice);
-        for(int i = 0; i < dice.size(); i++) {
-            if(dice.get(i) != (i + 2)) {
+        for (int i = 0; i < dice.size(); i++) {
+            if (dice.get(i) != (i + 2)) {
                 return false;
             }
         }
@@ -161,7 +161,7 @@ public class Throw {
 
     public int sum() {
         int sum = 0;
-        for(Integer integer : dice) {
+        for (Integer integer : dice) {
             sum += integer;
         }
         return sum;
@@ -170,5 +170,36 @@ public class Throw {
     public boolean isYahtzee() {
         Collections.sort(dice);
         return dice.get(0).equals(dice.get(4));
+    }
+
+    @Override
+    public String toString() {
+        return "Throw{" +
+                "dice=" + dice +
+                '}';
+    }
+
+    public Map<Integer, Integer> asMap() {
+        HashMap<Integer, Integer> diceInPositions = new HashMap<Integer, Integer>();
+        for (int i = 0; i < dice.size(); i++) {
+            diceInPositions.put(i, dice.get(i));
+        }
+
+        return diceInPositions;
+    }
+
+    public Throw mergeWith(Throw newThrow, List<Integer> currentlyHeldDice) {
+        Map<Integer, Integer> throwMap = newThrow.asMap();
+        List<Integer> values = new ArrayList<Integer>();
+
+        for (Integer key : throwMap.keySet()) {
+            if (currentlyHeldDice.contains(key)) {
+                throwMap.put(key, dice.get(key));
+            }
+
+            values.add(key, throwMap.get(key));
+        }
+
+        return new Throw(values.toArray(new Integer[throwMap.size()]));
     }
 }

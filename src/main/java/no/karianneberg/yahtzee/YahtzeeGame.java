@@ -1,23 +1,51 @@
 package no.karianneberg.yahtzee;
 
+import java.util.*;
+
 public class YahtzeeGame {
     private ThrowResultStrategy throwResultStrategy;
+    private Set<Combination> scoredCombinations;
+
     private Throw currentThrow;
     private int currentScore;
+    private int currentRoundNumber;
+    private List<Integer> currentlyHeldDice;
+    private int currentNumberOfThrowsInThisRound = 0;
+
+    private static final int NUMBER_OF_ROUNDS = Combination.values().length;
+    private static final int MAX_NUMBER_OF_THROWS_PER_ROUND = 3;
 
     public YahtzeeGame(ThrowResultStrategy throwResultStrategy) {
-
         this.throwResultStrategy = throwResultStrategy;
+        this.currentlyHeldDice = new ArrayList<Integer>();
+        this.currentRoundNumber = 1;
+        this.scoredCombinations = new HashSet<Combination>();
     }
 
     public void throwDice() {
-        this.currentThrow = throwResultStrategy.throwDice();
+        if(currentNumberOfThrowsInThisRound >= MAX_NUMBER_OF_THROWS_PER_ROUND) {
+            throw new YahtzeeException("You cannot throw the dice more than " + MAX_NUMBER_OF_THROWS_PER_ROUND + " times per round!");
+        }
+
+        Throw newThrow = throwResultStrategy.throwDice();
+        currentThrow = currentlyHeldDice.isEmpty() ? newThrow : currentThrow.mergeWith(newThrow, currentlyHeldDice);
+        currentNumberOfThrowsInThisRound++;
     }
 
-    public void holdDice() {
+    public void holdDice(Integer... positions) {
+        this.currentlyHeldDice = Arrays.asList(positions);
     }
 
     public int scoreFor(Combination combo) {
+        if(currentThrow == null) {
+            throw  new YahtzeeException("You have to throw at least once before you score");
+        }
+
+        if(scoredCombinations.contains(combo)) {
+            throw new YahtzeeException("This combination has already been taken!");
+        }
+
+        scoredCombinations.add(combo);
 
         int num;
         int score = 0;
@@ -90,11 +118,23 @@ public class YahtzeeGame {
         }
 
         currentScore += score;
+        currentRoundNumber++;
+        currentNumberOfThrowsInThisRound = 0;
+        currentlyHeldDice = new ArrayList<Integer>();
+        currentThrow = null;
 
         return score;
     }
 
     public int finalScore() {
         return currentScore;
+    }
+
+    public Map<Integer, Integer> getCurrentThrow() {
+        return currentThrow.asMap();
+    }
+
+    public boolean isOver() {
+        return currentRoundNumber > NUMBER_OF_ROUNDS;
     }
 }
