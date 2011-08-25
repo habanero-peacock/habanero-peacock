@@ -12,7 +12,7 @@ public class YahtzeeGame {
     private List<Integer> currentlyHeldDice;
     private int currentNumberOfThrowsInThisRound = 0;
 
-    private static final int NUMBER_OF_ROUNDS = Combination.values().length;
+    public static final int NUMBER_OF_ROUNDS = Combination.values().length;
     private static final int MAX_NUMBER_OF_THROWS_PER_ROUND = 3;
 
     public YahtzeeGame(ThrowResultStrategy throwResultStrategy) {
@@ -136,5 +136,16 @@ public class YahtzeeGame {
 
     public boolean isOver() {
         return currentRoundNumber > NUMBER_OF_ROUNDS;
+    }
+
+    public int getCurrentRoundNumber() {
+        return currentRoundNumber;
+    }
+
+    public Set<Combination> getRemainingCombos() {
+        Set<Combination> allCombos = new HashSet<Combination>(Arrays.asList(Combination.values()));
+        allCombos.removeAll(scoredCombinations);
+
+        return new HashSet<Combination>(allCombos);
     }
 }
