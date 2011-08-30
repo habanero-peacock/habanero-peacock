@@ -1,4 +1,4 @@
-package no.karianneberg.yahtzee;
+package no.karianneberg.yahtzee.game;
 
 public class YahtzeeException extends RuntimeException {
     public YahtzeeException(String msg) {

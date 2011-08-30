@@ -1,5 +1,6 @@
 package no.karianneberg.yahtzee;
 
+import no.karianneberg.yahtzee.game.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -276,7 +277,7 @@ public class YahtzeeGameTest {
 
         when(resultStrategy.throwDice()).thenReturn(new Throw(2, 2, 2, 2, 2));
         game.throwDice();
-        Map<Integer, Integer> firstThrow = game.getCurrentThrow();
+        Map<Integer, Integer> firstThrow = game.getCurrentThrowAsMap();
 
         Throw expectedThrow = new Throw(1, 1, 2, 2, 2);
 
@@ -297,7 +298,7 @@ public class YahtzeeGameTest {
         Throw allThrees = new Throw(3, 3, 3, 3, 3);
         when(resultStrategy.throwDice()).thenReturn(allThrees);
         game.throwDice();
-        assertThat(allThrees.asMap()).isEqualTo(game.getCurrentThrow());
+        assertThat(allThrees.asMap()).isEqualTo(game.getCurrentThrowAsMap());
     }
 
     @Test

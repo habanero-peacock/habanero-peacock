@@ -1,5 +1,9 @@
 package no.karianneberg.yahtzee;
 
+import no.karianneberg.yahtzee.game.Combination;
+import no.karianneberg.yahtzee.game.RandomThrowStrategy;
+import no.karianneberg.yahtzee.game.YahtzeeGame;
+
 import java.util.Scanner;
 
 public class Main {
@@ -12,7 +16,7 @@ public class Main {
         while (!game.isOver()) {
             System.out.println("ROUND " + game.getCurrentRoundNumber());
             game.throwDice();
-            System.out.println("Throw: " + game.getCurrentThrow());
+            System.out.println("Throw: " + game.getCurrentThrowAsMap());
 
             int cmd = 0;
             do {
@@ -30,10 +34,10 @@ public class Main {
 
                     game.holdDice(theDice);
                     game.throwDice();
-                    System.out.println("Throw: " + game.getCurrentThrow());
+                    System.out.println("Throw: " + game.getCurrentThrowAsMap());
                 } else if(cmd == 3) {
                     game.throwDice();
-                    System.out.println("Throw: " + game.getCurrentThrow());
+                    System.out.println("Throw: " + game.getCurrentThrowAsMap());
                 }
             } while (cmd != 1);
 

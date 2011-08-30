@@ -1,14 +1,14 @@
 package no.karianneberg.yahtzee;
 
+import no.karianneberg.yahtzee.game.Combination;
+import no.karianneberg.yahtzee.game.YahtzeeGame;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.Assert.assertTrue;
+import static no.karianneberg.yahtzee.game.Combination.*;
 import static org.fest.assertions.Assertions.assertThat;
-import static no.karianneberg.yahtzee.Combination.*;
-import static no.karianneberg.util.Maps.asMap;
-import static no.karianneberg.util.Maps.entry;
 
 
 public class AcceptanceTest {
@@ -18,23 +18,22 @@ public class AcceptanceTest {
 
         YahtzeeGame game = new YahtzeeGame(new OneThroughFiveStrategy());
 
-        Map<Combination, Integer> scores = asMap(
-                entry(ONES, 1),
-                entry(TWOS, 2),
-                entry(THREES, 3),
-                entry(FOURS, 4),
-                entry(FIVES, 5),
-                entry(SIXES, 0),
-                entry(ONE_PAIR, 0),
-                entry(TWO_PAIRS, 0),
-                entry(THREE_OF_A_KIND, 0),
-                entry(FOUR_OF_A_KIND, 0),
-                entry(FULL_HOUSE, 0),
-                entry(SMALL_STRAIGHT, 15),
-                entry(LARGE_STRAIGHT, 0),
-                entry(YAHTZEE, 0),
-                entry(CHANCE, 15)
-        );
+        Map<Combination, Integer> scores = new HashMap<Combination, Integer>();
+        scores.put(ONES, 1);
+        scores.put(TWOS, 2);
+        scores.put(THREES, 3);
+        scores.put(FOURS, 4);
+        scores.put(FIVES, 5);
+        scores.put(SIXES, 0);
+        scores.put(ONE_PAIR, 0);
+        scores.put(TWO_PAIRS, 0);
+        scores.put(THREE_OF_A_KIND, 0);
+        scores.put(FOUR_OF_A_KIND, 0);
+        scores.put(FULL_HOUSE, 0);
+        scores.put(SMALL_STRAIGHT, 15);
+        scores.put(LARGE_STRAIGHT, 0);
+        scores.put(YAHTZEE, 0);
+        scores.put(CHANCE, 15);
 
         for (Combination combo : scores.keySet()) {
             game.throwDice();
